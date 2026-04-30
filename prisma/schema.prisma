@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  userName  String
+  email     String
+  password  String
+  role      UserRole
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DoctorInfo {
+  id             Int      @id @default(autoincrement())
+  name           String
+  designation    String
+  degree         String
+  specialty      String
+  memberships    String
+  chamberAddress String
+  hospitalName   String
+  contactNumber  String
+  email          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model VisitAmount {
+  id               Int      @id @default(autoincrement())
+  newPatientAmount Int
+  oldPatientAmount Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ConnectorAmount {
+  id               Int           @id @default(autoincrement())
+  connectorId      Int
+  newPatientAmount Int
+  oldPatientAmount Int
+  connectorInfo    ConnectorInfo @relation(fields: [connectorId], references: [id])
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model PatientInfo {
+  id            Int     @id @default(autoincrement())
+  name          String
+  fatherName    String?
+  motherName    String?
+  age           Int
+  sex           Sex
+  contactNumber String
+  address       String
+
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+}
+
+model AssistantInfo {
+  id            Int      @id @default(autoincrement())
+  name          String
+  fatherName    String
+  motherName    String
+  dateOfBirth   DateTime
+  sex           Sex?
+  contactNumber String
+  email         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ConnectorInfo {
+  id               Int               @id @default(autoincrement())
+  name             String
+  contactNumber    String
+  email            String?
+  diagnosticName   String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  connectorAmounts ConnectorAmount[]
+  appointments     Appointment[]
+}
+
+model Appointment {
+  id            Int               @id @default(autoincrement())
+  patientId     Int
+  visitingDate  DateTime
+  visitingTime  String
+  connectorId   Int
+  visitingFee   Int?
+  weight        Float?
+  booldPusher   String?
+  bloodGroup    String?
+  status        AppointmentStatus @default(BOOKED)
+  paymentStatus PaymentStatus     @default(UNPAID)
+  connectorInfo ConnectorInfo     @relation(fields: [connectorId], references: [id])
+  patientInfo   PatientInfo       @relation(fields: [patientId], references: [id])
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+}
+
+enum UserRole {
+  PATIENT
+  DOCTOR
+  ASSISTANT
+  ADMIN
+}
+
+enum Sex {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum AppointmentStatus {
+  BOOKED
+  PRESENT
+  ABSENT
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
+  PARTIALLY_PAID
+}
