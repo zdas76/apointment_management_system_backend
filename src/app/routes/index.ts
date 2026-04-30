@@ -1,4 +1,5 @@
 import express from 'express';
+import { AuthRoutes } from '../modules/auth/Auth.route';
 
 export interface IRoute {
     path: string;
@@ -9,8 +10,8 @@ const router = express.Router();
 
 const moduleRoutes: IRoute[] = [
     {
-        path: '/users',
-        route: "/auth/login"
+        path: '/auth',
+        route: AuthRoutes
     }
 ];
 
