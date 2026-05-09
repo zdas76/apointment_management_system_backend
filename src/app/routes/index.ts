@@ -1,5 +1,7 @@
 import express from 'express';
 import { AuthRoutes } from '../modules/auth/Auth.route';
+import { PatientInfoRoute } from '../modules/patientInfo/PatientInfo.route';
+import { AssistantInfoRoute } from '../modules/assistantInfo/AssitantInfo.route';
 
 export interface IRoute {
     path: string;
@@ -12,6 +14,14 @@ const moduleRoutes: IRoute[] = [
     {
         path: '/auth',
         route: AuthRoutes
+    },
+    {
+        path: '/patient',
+        route: PatientInfoRoute
+    },
+    {
+        path: '/assistant',
+        route: AssistantInfoRoute
     }
 ];
 

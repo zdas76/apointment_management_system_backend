@@ -13,89 +13,72 @@ datasource db {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  userName      String
-  email         String         @unique
-  password      String
-  role          UserRole
-  status        Status         @default(ACTIVE)
-  assistantId   Int?
-  assistantInfo AssistantInfo? @relation(fields: [assistantId], references: [id])
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id         Int            @id @default(autoincrement())
+  userName   String
+  email      String         @unique
+  password   String
+  role       UserRole
+  status     Status         @default(ACTIVE)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  assistant  AssistantInfo?
+  doctorInfo DoctorInfo?
 }
 
 model DoctorInfo {
-  id             Int      @id @default(autoincrement())
-  name           String
-  designation    String
-  degree         String
-  specialty      String
-  memberships    String
-  chamberAddress String
-  hospitalName   String
-  contactNumber  String
-  email          String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-}
-
-model VisitAmount {
-  id               Int      @id @default(autoincrement())
-  newPatientAmount Int
-  oldPatientAmount Int
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-}
-
-model ConnectorAmount {
-  id               Int           @id @default(autoincrement())
-  connectorId      Int
-  newPatientAmount Int
-  oldPatientAmount Int
-  connectorInfo    ConnectorInfo @relation(fields: [connectorId], references: [id])
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  id                    Int      @id @default(autoincrement())
+  name                  String
+  designation           String
+  degree                String
+  specialty             String
+  memberships           String
+  chamberAddress        String
+  hospitalName          String
+  contactNumber         String
+  newPatientVisitingFee Int
+  oldPatientVisitingFee Int
+  email                 String   @unique
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  users                 User     @relation(fields: [email], references: [email])
 }
 
 model PatientInfo {
-  id            Int     @id @default(autoincrement())
+  id            Int           @id @default(autoincrement())
   name          String
-  fatherName    String?
-  motherName    String?
   age           Int
   sex           Sex
-  contactNumber String
+  contactNumber String        @unique
   address       String
-
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  appointments Appointment[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  appointments  Appointment[]
 }
 
 model AssistantInfo {
   id            Int      @id @default(autoincrement())
+  email         String   @unique
   name          String
   fatherName    String
   motherName    String
   dateOfBirth   DateTime
   sex           Sex?
   contactNumber String
-  email         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  users         User[]
+  users         User     @relation(fields: [email], references: [email])
 }
 
 model ConnectorInfo {
-  id               Int               @id @default(autoincrement())
+  id               Int           @id @default(autoincrement())
   name             String
   contactNumber    String
   email            String?
   diagnosticName   String?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @updatedAt
-  connectorAmounts ConnectorAmount[]
+  newPatientAmount Int
+  oldPatientAmount Int
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
   appointments     Appointment[]
 }
 
@@ -103,15 +86,15 @@ model Appointment {
   id            Int               @id @default(autoincrement())
   patientId     Int
   visitingDate  DateTime
-  visitingTime  String
-  connectorId   Int
+  visitingTime  String?
+  connectorId   Int?
   visitingFee   Int?
   weight        Float?
   booldPusher   String?
   bloodGroup    String?
   status        AppointmentStatus @default(BOOKED)
   paymentStatus PaymentStatus     @default(UNPAID)
-  connectorInfo ConnectorInfo     @relation(fields: [connectorId], references: [id])
+  connectorInfo ConnectorInfo?    @relation(fields: [connectorId], references: [id])
   patientInfo   PatientInfo       @relation(fields: [patientId], references: [id])
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
@@ -150,5 +133,5 @@ enum Status {
   PENDING
   CHECKED
   CLOSED
-  CONVERTED
+  COMPLETED
 }

@@ -1,9 +1,10 @@
 
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import handelZodError from "../errors/handelZorError";
 import { ZodError } from "zod";
-import AppError from "../errors/AppError";
+import handelZodError from "../error/handelZorError";
+import AppError from "../error/AppError";
+
 
 const globalErrorHandler = (
   err: any,
