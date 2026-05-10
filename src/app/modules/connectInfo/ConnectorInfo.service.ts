@@ -3,8 +3,9 @@ import { ConnetInfo } from "./ConnectorInfo.Interfact";
 
 
 const createConnect = async (connectData: ConnetInfo) => {
+    const { id, ...data } = connectData;
     const result = await prisma.connectorInfo.create({
-        data: connectData,
+        data,
     });
     return result;
 };
@@ -22,9 +23,10 @@ const getConnectById = async (id: number) => {
 };
 
 const updateConnect = async (id: number, connectData: ConnetInfo) => {
+    const { id: _, ...data } = connectData;
     const result = await prisma.connectorInfo.update({
         where: { id },
-        data: connectData,
+        data,
     });
     return result;
 };

@@ -8,5 +8,29 @@ const adapter = new PrismaMariaDb({
     database: process.env.DATABASE_NAME,
     connectionLimit: 10,
 });
-const prisma = new PrismaClient({ adapter });
+const prisma = new PrismaClient({
+    adapter,
+    log: [
+        {
+            emit: "event",
+            level: "query",
+        },
+        {
+            emit: "event",
+            level: "error",
+        },
+        {
+            emit: "event",
+            level: "info",
+        },
+        {
+            emit: "event",
+            level: "warn",
+        },
+    ],
+});
+
+prisma.$on("error", (e) => {
+    console.log(e);
+});
 export { prisma };

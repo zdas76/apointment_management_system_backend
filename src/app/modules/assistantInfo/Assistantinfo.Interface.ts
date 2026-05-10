@@ -1,6 +1,15 @@
-import { Sex } from "../../../generated/prisma/enums";
+import { Sex, Status, UserRole } from "../../../generated/prisma/enums";
 
-type AssistantInfo = {
+
+export type User = {
+    userName: string,
+    email: string,
+    password: string,
+    role: UserRole,
+    status: Status,
+}
+
+export type IAssistantInfo = {
     id?: number,
     name: string,
     fatherName: string,
@@ -9,4 +18,8 @@ type AssistantInfo = {
     sex: Sex,
     contactNumber: string,
     email: string,
+    userName: string,
+    password: string,
+    role: UserRole,
+    status: Status,
 }

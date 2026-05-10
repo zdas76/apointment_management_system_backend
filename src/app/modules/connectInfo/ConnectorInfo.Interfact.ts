@@ -5,6 +5,8 @@ export type ConnetInfo = {
     email?: string | null,
     contactNumber: string,
     diagnosticName?: string | null,
+    newPatientAmount: number,
+    oldPatientAmount: number,
 }
 
 export type ConnectorAmount = {
