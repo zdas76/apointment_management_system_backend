@@ -1,4 +1,4 @@
-import { AssistantInfo } from "../../../generated/prisma/client";
+import { AssistantInfo, Status } from "../../../generated/prisma/client";
 import { prisma } from "../../utiles/prisma";
 import { IAssistantInfo } from "./Assistantinfo.Interface";
 import bcrypt from "bcrypt";
@@ -109,19 +109,14 @@ const deleteAssistant = async (id: number) => {
         throw new Error("Assistant not found");
     }
 
-    const deleteAssistantInfo = await prisma.$transaction(async (tx) => {
-        const deleteAssistantInfo = await tx.assistantInfo.delete({
-            where: { id },
-        });
-
-        const deleteUser = await tx.user.delete({
-            where: { email: isExist.email },
-        });
-
-        return { deleteAssistantInfo, deleteUser };
+    const deleteUser = await prisma.user.update({
+        where: { email: isExist.email },
+        data: {
+            status: Status.DELETED
+        }
     });
 
-    return deleteAssistantInfo;
+    return deleteUser;
 };
 
 export const AssistantInfoService = {
