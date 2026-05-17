@@ -1,11 +1,10 @@
 import { prisma } from "../../utiles/prisma";
-import { ConnetInfo } from "./ConnectorInfo.Interfact";
+import { IConnectorInfo, IUpdateConnectorInfo } from "./ConnectorInfo.Interface";
 
 
-const createConnect = async (connectData: ConnetInfo) => {
-    const { id, ...data } = connectData;
+const createConnect = async (connectData: IConnectorInfo) => {
     const result = await prisma.connectorInfo.create({
-        data,
+        data: connectData,
     });
     return result;
 };
@@ -22,16 +21,31 @@ const getConnectById = async (id: number) => {
     return result;
 };
 
-const updateConnect = async (id: number, connectData: ConnetInfo) => {
-    const { id: _, ...data } = connectData;
+const updateConnect = async (id: number, connectData: IUpdateConnectorInfo) => {
+    const isExist = await prisma.connectorInfo.findUnique({
+        where: { id },
+    });
+
+    if (!isExist) {
+        throw new Error("Connector not found");
+    }
+
     const result = await prisma.connectorInfo.update({
         where: { id },
-        data,
+        data: connectData,
     });
     return result;
 };
 
 const deleteConnect = async (id: number) => {
+    const isExist = await prisma.connectorInfo.findUnique({
+        where: { id },
+    });
+
+    if (!isExist) {
+        throw new Error("Connector not found");
+    }
+
     const result = await prisma.connectorInfo.delete({
         where: { id },
     });

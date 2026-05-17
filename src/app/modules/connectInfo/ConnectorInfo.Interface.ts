@@ -1,5 +1,5 @@
 
-export type ConnetInfo = {
+export type IConnectorInfo = {
     id?: number,
     name: string,
     email?: string | null,
@@ -9,21 +9,11 @@ export type ConnetInfo = {
     oldPatientAmount: number,
 }
 
-export type ConnectorAmount = {
-    id?: number,
-    connectorId: number,
-    newPatientAmount: number,
-    oldPatientAmount: number,
-}
-
-export type UpdateConnectorInfo = {
+export type IUpdateConnectorInfo = {
     name?: string,
     email?: string | null,
     contactNumber?: string,
     diagnosticName?: string | null,
-}
-
-export type UpdateConnectorAmount = {
     newPatientAmount?: number,
     oldPatientAmount?: number,
 }

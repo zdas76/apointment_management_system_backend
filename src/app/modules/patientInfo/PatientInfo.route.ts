@@ -11,6 +11,8 @@ router.post("/", PatientInfoController.createPatient);
 
 router.get("/", PatientInfoController.getAllPatient);
 
+router.get("/search", PatientInfoController.getAllPatientBySearch);
+
 router.get("/:id", PatientInfoController.getPatientById);
 
 router.patch("/:id", PatientInfoController.updatePatient);

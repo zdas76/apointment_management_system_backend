@@ -1,19 +1,15 @@
-import { prisma } from "../../utiles/prisma";
-import { IPatientInfo } from "./patient.Interface";
-
-
-
-const createPatient = async (body: IPatientInfo) => {
-
-    const result = await prisma.patientInfo.create({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PatientInfoService = void 0;
+const prisma_1 = require("../../utiles/prisma");
+const createPatient = async (body) => {
+    const result = await prisma_1.prisma.patientInfo.create({
         data: body,
     });
     return result;
-}
-
+};
 const getAllPatient = async () => {
-
-    const result = await prisma.patientInfo.findMany({
+    const result = await prisma_1.prisma.patientInfo.findMany({
         where: {
             isDeleted: false,
         },
@@ -22,11 +18,9 @@ const getAllPatient = async () => {
         }
     });
     return result;
-}
-
-const getAllPatientBySearch = async (searchTerm: string): Promise<IPatientInfo[]> => {
-
-    const result = await prisma.patientInfo.findMany({
+};
+const getAllPatientBySearch = async (searchTerm) => {
+    const result = await prisma_1.prisma.patientInfo.findMany({
         where: {
             isDeleted: false,
             ...(searchTerm && {
@@ -49,41 +43,31 @@ const getAllPatientBySearch = async (searchTerm: string): Promise<IPatientInfo[]
         }
     });
     return result;
-}
-
-
-const getPatientById = async (id: number): Promise<IPatientInfo | null> => {
-    const result = await prisma.patientInfo.findUnique({
+};
+const getPatientById = async (id) => {
+    const result = await prisma_1.prisma.patientInfo.findUnique({
         where: { id },
     });
-
     return result;
-}
-
-
-const updatePatient = async (id: number, body: IPatientInfo): Promise<IPatientInfo> => {
-    const result = await prisma.patientInfo.update({
+};
+const updatePatient = async (id, body) => {
+    const result = await prisma_1.prisma.patientInfo.update({
         where: { id },
         data: body,
     });
     return result;
-}
-
-
-const deletePatient = async (id: number): Promise<IPatientInfo> => {
-    const result = await prisma.patientInfo.delete({
+};
+const deletePatient = async (id) => {
+    const result = await prisma_1.prisma.patientInfo.delete({
         where: { id },
     });
     return result;
-}
-
-
-
-export const PatientInfoService = {
+};
+exports.PatientInfoService = {
     createPatient,
     getAllPatient,
     getPatientById,
     updatePatient,
     deletePatient,
     getAllPatientBySearch
-}
+};

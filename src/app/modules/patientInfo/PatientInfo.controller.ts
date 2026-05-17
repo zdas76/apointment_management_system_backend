@@ -19,7 +19,21 @@ const createPatient = catchAsync(async (req: Request, res: Response) => {
 
 
 const getAllPatient = catchAsync(async (req: Request, res: Response) => {
+
     const result = await PatientInfoService.getAllPatient();
+
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: "Patient fetch Successfully",
+        data: result,
+    });
+});
+
+const getAllPatientBySearch = catchAsync(async (req: Request, res: Response) => {
+    const searchTerm = (req.query.search || null) as string;
+
+    const result = await PatientInfoService.getAllPatientBySearch(searchTerm);
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,
@@ -72,5 +86,6 @@ export const PatientInfoController = {
     getAllPatient,
     getPatientById,
     updatePatient,
-    deletePatient
+    deletePatient,
+    getAllPatientBySearch
 }

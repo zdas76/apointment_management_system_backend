@@ -27,20 +27,29 @@ model User {
 
 model DoctorInfo {
   id                    Int      @id @default(autoincrement())
-  name                  String
-  designation           String
-  degree                String
-  specialty             String
-  memberships           String
-  chamberAddress        String
-  hospitalName          String
-  contactNumber         String
-  newPatientVisitingFee Int
-  oldPatientVisitingFee Int
+  nameEnglish           String?
+  nameBangla            String?
+  designation           String?
+  degree                String?
+  specialty             String?
+  memberships           String?
+  chamberAddress        String?
+  hospitalName          String?
+  contactNumber         String?
+  newPatientVisitingFee Int?
+  oldPatientVisitingFee Int?
   email                 String   @unique
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   users                 User     @relation(fields: [email], references: [email])
+}
+
+model SafeMode {
+  id        Int      @id @default(autoincrement())
+  isSafe    Boolean  @default(false)
+  limit     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model PatientInfo {
@@ -50,6 +59,7 @@ model PatientInfo {
   sex           Sex
   contactNumber String        @unique
   address       String
+  isDeleted     Boolean       @default(false)
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   appointments  Appointment[]
@@ -64,6 +74,7 @@ model AssistantInfo {
   dateOfBirth   DateTime
   sex           Sex?
   contactNumber String
+  isDeleted     Boolean  @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   users         User     @relation(fields: [email], references: [email])
@@ -77,6 +88,7 @@ model ConnectorInfo {
   diagnosticName   String?
   newPatientAmount Int
   oldPatientAmount Int
+  isDeleted        Boolean       @default(false)
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
   appointments     Appointment[]
@@ -85,10 +97,12 @@ model ConnectorInfo {
 model Appointment {
   id            Int               @id @default(autoincrement())
   patientId     Int
-  visitingDate  DateTime
+  visitingDate  DateTime?
+  patientType   PatientType?
   visitingTime  String?
   connectorId   Int?
   visitingFee   Int?
+  discount      Int?
   weight        Float?
   booldPusher   String?
   bloodGroup    String?
@@ -134,4 +148,9 @@ enum Status {
   CHECKED
   CLOSED
   COMPLETED
+}
+
+enum PatientType {
+  NEW
+  OLD
 }
