@@ -9,6 +9,8 @@ const PatientInfo_route_1 = require("../modules/patientInfo/PatientInfo.route");
 const AssitantInfo_route_1 = require("../modules/assistantInfo/AssitantInfo.route");
 const ConnectorInfo_route_1 = require("../modules/connectInfo/ConnectorInfo.route");
 const Appointment_route_1 = require("../modules/appointment/Appointment.route");
+const profile_route_1 = require("../modules/Profile/profile.route");
+const User_route_1 = require("../modules/user/User.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -30,6 +32,14 @@ const moduleRoutes = [
     {
         path: '/appointment',
         route: Appointment_route_1.AppointmentRoute
+    },
+    {
+        path: '/profile',
+        route: profile_route_1.ProfileRoute
+    },
+    {
+        path: '/users',
+        route: User_route_1.UserRoute
     }
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

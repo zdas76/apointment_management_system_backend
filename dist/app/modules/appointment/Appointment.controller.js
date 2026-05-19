@@ -27,7 +27,8 @@ const getAllAppointment = (0, catchAsync_1.default)(async (req, res) => {
     });
 });
 const getAppointmentById = (0, catchAsync_1.default)(async (req, res) => {
-    const result = await Appointment_service_1.AppointmentService.getAppointmentById(Number(req.params.id));
+    const id = parseInt(req.params.id);
+    const result = await Appointment_service_1.AppointmentService.getAppointmentById(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,

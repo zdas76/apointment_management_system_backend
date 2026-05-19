@@ -30,11 +30,6 @@ model DoctorInfo {
   nameEnglish           String?
   nameBangla            String?
   designation           String?
-  degree                String?
-  specialty             String?
-  memberships           String?
-  chamberAddress        String?
-  hospitalName          String?
   contactNumber         String?
   newPatientVisitingFee Int?
   oldPatientVisitingFee Int?
@@ -42,14 +37,15 @@ model DoctorInfo {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
   users                 User     @relation(fields: [email], references: [email])
+  isSafes               IsSafe[]
 }
 
-model SafeMode {
-  id        Int      @id @default(autoincrement())
-  isSafe    Boolean  @default(false)
-  limit     Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model IsSafe {
+  id         Int         @id @default(autoincrement())
+  isSafe     Boolean     @default(false)
+  limit      Int?
+  doctorId   Int?
+  doctorInfo DoctorInfo? @relation(fields: [doctorId], references: [id])
 }
 
 model PatientInfo {

@@ -1,4 +1,4 @@
-import { Appointment } from "../../../generated/prisma/client";
+import { Appointment, AppointmentStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../utiles/prisma";
 import { IAppointment } from "./Appointment.interface";
 
@@ -43,19 +43,37 @@ const createAppointment = async (appointmentData: IAppointment) => {
     return result;
 };
 
-const getAllAppointment = async () => {
+const getAllAppointmentbyDays = async (queryDate?: string) => {
+
+    let date = new Date();
+
+    if (queryDate) {
+        date = new Date(queryDate);
+    }
+
+    // if (date) {
+    //     date.setHours(0, 0, 0, 0);
+    // }
+
     const result = await prisma.appointment.findMany({
+        where: {
+            visitingDate: date
+        },
         include: {
             patientInfo: true,
             connectorInfo: true,
+        },
+        orderBy: {
+            visitingTime: "asc",
         },
     });
     return result;
 };
 
 const getAppointmentById = async (id: number) => {
+
     const result = await prisma.appointment.findFirst({
-        where: { id },
+        where: { id: Number(id) },
         include: {
             patientInfo: true,
             connectorInfo: true,
@@ -77,6 +95,7 @@ const getLastAppointmentDate = async (patientId: number) => {
     const result = await prisma.appointment.findFirst({
         where: {
             patientId: isPatientExist.id,
+            status: AppointmentStatus.PRESENT
         },
         orderBy: {
             visitingDate: "desc",
@@ -127,6 +146,14 @@ const updateAppointment = async (id: number, appointmentData: Appointment) => {
     return result;
 };
 
+const updateAppointmentStatus = async (id: number, status: AppointmentStatus) => {
+    const result = await prisma.appointment.update({
+        where: { id: Number(id) },
+        data: { status },
+    });
+    return result;
+};
+
 const deleteAppointment = async (id: number) => {
 
     const isExist = await prisma.appointment.findUnique({
@@ -146,9 +173,10 @@ const deleteAppointment = async (id: number) => {
 
 export const AppointmentService = {
     createAppointment,
-    getAllAppointment,
+    getAllAppointmentbyDays,
     getAppointmentById,
     updateAppointment,
+    updateAppointmentStatus,
     deleteAppointment,
     getLastAppointmentDate
 };

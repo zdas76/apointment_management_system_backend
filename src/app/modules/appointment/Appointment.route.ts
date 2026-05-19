@@ -5,11 +5,13 @@ const router = express.Router();
 
 router.post("/", AppointmentController.createAppointment);
 
-router.get("/", AppointmentController.getAllAppointment);
+router.get("/", AppointmentController.getAllAppointmentbyDays);
 
 router.get("/last-date", AppointmentController.getLastAppointmentDate);
 
 router.get("/:id", AppointmentController.getAppointmentById);
+
+router.patch("/:id/status", AppointmentController.updateAppointmentStatus);
 
 router.patch("/:id", AppointmentController.updateAppointment);
 

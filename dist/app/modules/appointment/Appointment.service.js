@@ -63,22 +63,16 @@ const getLastAppointmentDate = async (patientId) => {
     }
     const result = await prisma_1.prisma.appointment.findFirst({
         where: {
-            patientId: patientId,
+            patientId: isPatientExist.id,
         },
         orderBy: {
             visitingDate: "desc",
         },
     });
-    if (!result) {
-        throw new Error("Appointment not found");
-    }
-    return result;
+    return { isPatientExist, result };
 };
 const updateAppointment = async (id, appointmentData) => {
     const updateData = {};
-    if (appointmentData.patientId) {
-        updateData.patientId = appointmentData.patientId;
-    }
     if (appointmentData.visitingDate) {
         updateData.visitingDate = new Date(appointmentData.visitingDate);
     }
@@ -87,12 +81,6 @@ const updateAppointment = async (id, appointmentData) => {
     }
     if (appointmentData.visitingTime) {
         updateData.visitingTime = appointmentData.visitingTime;
-    }
-    if (appointmentData.connectorId) {
-        updateData.connectorId = appointmentData.connectorId;
-    }
-    if (appointmentData.visitingFee) {
-        updateData.visitingFee = appointmentData.visitingFee;
     }
     if (appointmentData.discount) {
         updateData.discount = appointmentData.discount;

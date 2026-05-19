@@ -10,10 +10,12 @@ import emailSender from "./emailSender";
 
 
 
-const loginUser = async (payLoad: { email: string; password: string }) => {
+const loginUser = async (payLoad: { userName: string; password: string }) => {
+
+
     const userData = await prisma.user.findFirst({
         where: {
-            email: payLoad.email,
+            userName: payLoad.userName,
             status: Status.ACTIVE,
         },
     });
@@ -35,6 +37,7 @@ const loginUser = async (payLoad: { email: string; password: string }) => {
         {
             id: userData.id,
             email: userData?.email,
+            userName: userData?.userName,
             role: userData?.role,
         },
         config.jwt.jwt_secret as Secret,
@@ -45,6 +48,7 @@ const loginUser = async (payLoad: { email: string; password: string }) => {
         {
             id: userData.id,
             email: userData?.email,
+            userName: userData?.userName,
             role: userData?.role,
         },
         config.jwt.refresh_token_secret as Secret,
@@ -78,6 +82,7 @@ const refreshToken = async (token: string) => {
         {
             id: userData.id,
             email: userData?.email,
+            userName: userData?.userName,
             role: userData?.role,
         },
         config.jwt.jwt_secret as Secret,
@@ -90,12 +95,12 @@ const refreshToken = async (token: string) => {
 };
 
 const changePassword = async (
-    user: { email: string; role: string; iat: number; exp: number },
+    user: { userName: string; role: string; iat: number; exp: number },
     data: { olePassword: string; newPassword: string }
 ) => {
     const userData = await prisma.user.findFirstOrThrow({
         where: {
-            email: user.email,
+            userName: user.userName,
             status: Status.ACTIVE,
         },
     });
@@ -114,7 +119,7 @@ const changePassword = async (
 
     await prisma.user.update({
         where: {
-            email: userData.email,
+            userName: userData.userName,
         },
         data: {
             password: hassPassWord,
@@ -138,6 +143,7 @@ const forgotPassword = async (playLoad: { email: string }) => {
         {
             id: userData.id,
             email: userData?.email,
+            userName: userData?.userName,
             role: userData?.role,
         },
         config.jwt.reset_pass_secret as Secret,
