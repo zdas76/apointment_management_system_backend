@@ -1,13 +1,31 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppointmentService = void 0;
+const client_1 = require("../../../generated/prisma/client");
 const prisma_1 = require("../../utiles/prisma");
+const generatePatientId_1 = require("../../utiles/generatePatientId");
 const createAppointment = async (appointmentData) => {
-    const isPatientExist = await prisma_1.prisma.patientInfo.findUnique({
-        where: { id: appointmentData.patientId },
-    });
-    if (!isPatientExist) {
-        throw new Error("Patient not found");
+    const patientId = await (0, generatePatientId_1.generatePatientId)();
+    let isPatientExist = null;
+    if (!appointmentData.patientId) {
+        isPatientExist = await prisma_1.prisma.patientInfo.create({
+            data: {
+                patientId,
+                name: appointmentData.name,
+                contactNumber: appointmentData.contactNumber,
+                age: appointmentData.age,
+                sex: appointmentData.sex,
+                address: appointmentData.address,
+            },
+        });
+    }
+    else {
+        isPatientExist = await prisma_1.prisma.patientInfo.findUnique({
+            where: { patientId: appointmentData.patientId },
+        });
+        if (!isPatientExist) {
+            throw new Error("Patient not found");
+        }
     }
     if (appointmentData.connectorId) {
         const isConnectorExist = await prisma_1.prisma.connectorInfo.findUnique({
@@ -19,8 +37,8 @@ const createAppointment = async (appointmentData) => {
     }
     const result = await prisma_1.prisma.appointment.create({
         data: {
-            patientId: appointmentData.patientId,
-            visitingDate: appointmentData.visitingDate ? new Date(appointmentData.visitingDate) : null,
+            patientId: isPatientExist?.patientId,
+            visitingDate: new Date(appointmentData.visitingDate),
             patientType: appointmentData.patientType,
             visitingTime: appointmentData.visitingTime,
             connectorId: appointmentData.connectorId,
@@ -35,41 +53,62 @@ const createAppointment = async (appointmentData) => {
     });
     return result;
 };
-const getAllAppointment = async () => {
-    const result = await prisma_1.prisma.appointment.findMany({
+const getAllAppointmentbyDays = async (queryDate) => {
+    const isSafestatus = await prisma_1.prisma.isSafe.findFirst();
+    let date = new Date();
+    if (queryDate) {
+        date = new Date(queryDate);
+    }
+    const PresentAppointment = await prisma_1.prisma.appointment.findMany({
+        where: {
+            visitingDate: date,
+            status: client_1.AppointmentStatus.PRESENT,
+        },
+        ...(isSafestatus?.isSafe === true &&
+            isSafestatus?.limit != null && {
+            take: isSafestatus.limit,
+        }),
         include: {
             patientInfo: true,
             connectorInfo: true,
         },
     });
-    return result;
+    const OtherAppointments = await prisma_1.prisma.appointment.findMany({
+        where: {
+            visitingDate: date,
+            OR: [
+                { status: client_1.AppointmentStatus.BOOKED },
+                { status: client_1.AppointmentStatus.ABSENT },
+                { status: client_1.AppointmentStatus.VISITED }
+            ]
+        },
+        ...(isSafestatus?.isSafe === true &&
+            isSafestatus?.limit != null && {
+            take: isSafestatus.limit,
+        }),
+        include: {
+            patientInfo: true,
+            connectorInfo: true,
+        },
+    });
+    return [...PresentAppointment, ...OtherAppointments];
 };
 const getAppointmentById = async (id) => {
     const result = await prisma_1.prisma.appointment.findFirst({
-        where: { id },
+        where: { id: Number(id) },
         include: {
             patientInfo: true,
-            connectorInfo: true,
+            connectorInfo: {
+                select: {
+                    id: true,
+                    name: true,
+                    newPatientAmount: true,
+                    oldPatientAmount: true,
+                }
+            },
         },
     });
     return result;
-};
-const getLastAppointmentDate = async (patientId) => {
-    const isPatientExist = await prisma_1.prisma.patientInfo.findFirst({
-        where: { id: patientId },
-    });
-    if (!isPatientExist) {
-        throw new Error("Patient not found");
-    }
-    const result = await prisma_1.prisma.appointment.findFirst({
-        where: {
-            patientId: isPatientExist.id,
-        },
-        orderBy: {
-            visitingDate: "desc",
-        },
-    });
-    return { isPatientExist, result };
 };
 const updateAppointment = async (id, appointmentData) => {
     const updateData = {};
@@ -81,6 +120,15 @@ const updateAppointment = async (id, appointmentData) => {
     }
     if (appointmentData.visitingTime) {
         updateData.visitingTime = appointmentData.visitingTime;
+    }
+    if (appointmentData.connectorId) {
+        updateData.connectorId = appointmentData.connectorId;
+    }
+    if (appointmentData.visitingFee) {
+        updateData.visitingFee = appointmentData.visitingFee;
+    }
+    if (appointmentData.connectorFee) {
+        updateData.connectorFee = appointmentData.connectorFee;
     }
     if (appointmentData.discount) {
         updateData.discount = appointmentData.discount;
@@ -100,29 +148,48 @@ const updateAppointment = async (id, appointmentData) => {
     if (appointmentData.paymentStatus) {
         updateData.paymentStatus = appointmentData.paymentStatus;
     }
+    const appointment = await prisma_1.prisma.appointment.findFirst({
+        where: { id: Number(id) },
+    });
+    if (!appointment) {
+        throw new Error("Appointment not found");
+    }
     const result = await prisma_1.prisma.appointment.update({
-        where: { id },
+        where: { id: appointment.id },
         data: updateData,
     });
     return result;
 };
+const updateAppointmentStatus = async (id, status) => {
+    const appointment = await prisma_1.prisma.appointment.findFirst({
+        where: { id: Number(id) },
+    });
+    if (!appointment) {
+        throw new Error("Appointment not found");
+    }
+    const result = await prisma_1.prisma.appointment.update({
+        where: { id: appointment.id },
+        data: { status },
+    });
+    return result;
+};
 const deleteAppointment = async (id) => {
-    const isExist = await prisma_1.prisma.appointment.findUnique({
-        where: { id },
+    const isExist = await prisma_1.prisma.appointment.findFirst({
+        where: { id: Number(id) },
     });
     if (!isExist) {
         throw new Error("Appointment not found");
     }
     const result = await prisma_1.prisma.appointment.delete({
-        where: { id },
+        where: { id: isExist.id },
     });
     return result;
 };
 exports.AppointmentService = {
     createAppointment,
-    getAllAppointment,
+    getAllAppointmentbyDays,
     getAppointmentById,
     updateAppointment,
+    updateAppointmentStatus,
     deleteAppointment,
-    getLastAppointmentDate
 };

@@ -11,18 +11,24 @@ const app: Application = express();
 
 app.use(
     cors({
-        origin: ["http://localhost:5173"],
+        origin: [
+            "http://localhost:5173",
+            "http://drnipa.net",
+            "https://drnipa.net",
+        ],
         credentials: true,
     })
-)
-
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookiParser());
 
-app.use("/api/v1/image", express.static("public/images"));
+// app.use("/api/v1/image", express.static("public/images"));
 
+app.get("/", (req: Request, res: Response) => {
+    res.send("Appointment Management System Backend is running!");
+});
 
 app.use("/api/v1", router);
 

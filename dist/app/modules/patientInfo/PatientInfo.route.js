@@ -10,7 +10,7 @@ const router = express_1.default.Router();
 router.post("/", PatientInfo_controller_1.PatientInfoController.createPatient);
 router.get("/", PatientInfo_controller_1.PatientInfoController.getAllPatient);
 router.get("/search", PatientInfo_controller_1.PatientInfoController.getAllPatientBySearch);
-router.get("/:id", PatientInfo_controller_1.PatientInfoController.getPatientById);
+router.get("/:patientId", PatientInfo_controller_1.PatientInfoController.getPatientById);
 router.patch("/:id", PatientInfo_controller_1.PatientInfoController.updatePatient);
 router.delete("/:id", PatientInfo_controller_1.PatientInfoController.deletePatient);
 exports.PatientInfoRoute = router;

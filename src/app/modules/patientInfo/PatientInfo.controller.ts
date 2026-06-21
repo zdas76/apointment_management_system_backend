@@ -4,8 +4,6 @@ import catchAsync from "../../shared/catchAsync";
 import sendResponse from "../../shared/sendResponse";
 import { PatientInfoService } from "./PatientInfo.service";
 
-
-
 const createPatient = catchAsync(async (req: Request, res: Response) => {
     const result = await PatientInfoService.createPatient(req.body);
 
@@ -44,7 +42,7 @@ const getAllPatientBySearch = catchAsync(async (req: Request, res: Response) => 
 });
 
 const getPatientById = catchAsync(async (req: Request, res: Response) => {
-    const result = await PatientInfoService.getPatientById(Number(req.params.id));
+    const result = await PatientInfoService.getPatientById(Number(req.params.patientId));
 
     sendResponse(res, {
         statusCode: StatusCodes.OK,

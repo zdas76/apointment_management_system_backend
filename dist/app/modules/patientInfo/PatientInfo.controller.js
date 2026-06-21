@@ -37,7 +37,7 @@ const getAllPatientBySearch = (0, catchAsync_1.default)(async (req, res) => {
     });
 });
 const getPatientById = (0, catchAsync_1.default)(async (req, res) => {
-    const result = await PatientInfo_service_1.PatientInfoService.getPatientById(Number(req.params.id));
+    const result = await PatientInfo_service_1.PatientInfoService.getPatientById(Number(req.params.patientId));
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.OK,
         success: true,

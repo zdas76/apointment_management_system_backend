@@ -1,15 +1,10 @@
-import { AppointmentStatus, PatientType, PaymentStatus, Sex } from "../../../generated/prisma/enums";
+import { AppointmentStatus, PatientType, PaymentStatus } from "../../../generated/prisma/enums";
 
 export type IAppointment = {
     id?: number,
-    patientId: number | null,
-    name?: string,
-    age?: string,
-    sex?: Sex,
-    contactNumber: string,
-    address?: string,
-    visitingDate: Date,
-    patientType: PatientType,
+    patientId: number,
+    visitingDate?: Date,
+    patientType?: PatientType,
     visitingTime?: string,
     connectorId?: number,
     visitingFee?: number,

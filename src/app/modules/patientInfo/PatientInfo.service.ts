@@ -1,12 +1,17 @@
+import { generatePatientId } from "../../utiles/generatePatientId";
 import { prisma } from "../../utiles/prisma";
 import { IPatientInfo } from "./patient.Interface";
 
 
-
 const createPatient = async (body: IPatientInfo) => {
 
+    const patientId = await generatePatientId()
+
     const result = await prisma.patientInfo.create({
-        data: body,
+        data: {
+            ...body,
+            patientId
+        },
     });
     return result;
 }
@@ -17,6 +22,7 @@ const getAllPatient = async () => {
         where: {
             isDeleted: false,
         },
+
         orderBy: {
             createdAt: "desc"
         }
@@ -24,7 +30,7 @@ const getAllPatient = async () => {
     return result;
 }
 
-const getAllPatientBySearch = async (searchTerm: string): Promise<IPatientInfo[]> => {
+const getAllPatientBySearch = async (searchTerm: string) => {
 
     const result = await prisma.patientInfo.findMany({
         where: {
@@ -44,17 +50,39 @@ const getAllPatientBySearch = async (searchTerm: string): Promise<IPatientInfo[]
                 ]
             })
         },
-        orderBy: {
-            createdAt: "desc"
+        select: {
+            id: true,
+            name: true,
+            contactNumber: true,
+            patientId: true,
+            age: true,
+            sex: true,
+            address: true
         }
     });
+
     return result;
 }
 
 
-const getPatientById = async (id: number): Promise<IPatientInfo | null> => {
+const getPatientById = async (patientId: number): Promise<IPatientInfo | null> => {
+
     const result = await prisma.patientInfo.findUnique({
-        where: { id },
+        where: { patientId: patientId },
+        include: {
+            appointments: {
+                orderBy: {
+                    visitingDate: "desc"
+                },
+                take: 1,
+                select: {
+                    visitingDate: true,
+                    status: true,
+                    paymentStatus: true,
+                    patientType: true,
+                }
+            },
+        },
     });
 
     return result;
@@ -76,7 +104,6 @@ const deletePatient = async (id: number): Promise<IPatientInfo> => {
     });
     return result;
 }
-
 
 
 export const PatientInfoService = {

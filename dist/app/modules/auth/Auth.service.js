@@ -15,7 +15,7 @@ const emailSender_1 = __importDefault(require("./emailSender"));
 const loginUser = async (payLoad) => {
     const userData = await prisma_1.prisma.user.findFirst({
         where: {
-            email: payLoad.email,
+            userName: payLoad.userName,
             status: enums_1.Status.ACTIVE,
         },
     });
@@ -29,11 +29,13 @@ const loginUser = async (payLoad) => {
     const accessToken = jwtHelpers_1.jwtHelpers.generateToken({
         id: userData.id,
         email: userData?.email,
+        userName: userData?.userName,
         role: userData?.role,
     }, config_1.default.jwt.jwt_secret, config_1.default.jwt.expires_in);
     const refreshToken = jwtHelpers_1.jwtHelpers.generateToken({
         id: userData.id,
         email: userData?.email,
+        userName: userData?.userName,
         role: userData?.role,
     }, config_1.default.jwt.refresh_token_secret, config_1.default.jwt.refresh_token_expires_in);
     return {
@@ -58,6 +60,7 @@ const refreshToken = async (token) => {
     const accessToken = jwtHelpers_1.jwtHelpers.generateToken({
         id: userData.id,
         email: userData?.email,
+        userName: userData?.userName,
         role: userData?.role,
     }, config_1.default.jwt.jwt_secret, config_1.default.jwt.expires_in);
     return {
@@ -67,7 +70,7 @@ const refreshToken = async (token) => {
 const changePassword = async (user, data) => {
     const userData = await prisma_1.prisma.user.findFirstOrThrow({
         where: {
-            email: user.email,
+            userName: user.userName,
             status: enums_1.Status.ACTIVE,
         },
     });
@@ -78,7 +81,7 @@ const changePassword = async (user, data) => {
     const hassPassWord = await bcrypt_1.default.hash(data.newPassword, parseInt(config_1.default.hash_round));
     await prisma_1.prisma.user.update({
         where: {
-            email: userData.email,
+            userName: userData.userName,
         },
         data: {
             password: hassPassWord,
@@ -98,6 +101,7 @@ const forgotPassword = async (playLoad) => {
     const resetPasswordToken = jwtHelpers_1.jwtHelpers.generateToken({
         id: userData.id,
         email: userData?.email,
+        userName: userData?.userName,
         role: userData?.role,
     }, config_1.default.jwt.reset_pass_secret, config_1.default.jwt.reset_pass_token_expires_in);
     const resetPassLink = config_1.default.reset_pass_link +

@@ -1,10 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PatientInfoService = void 0;
+const generatePatientId_1 = require("../../utiles/generatePatientId");
 const prisma_1 = require("../../utiles/prisma");
 const createPatient = async (body) => {
+    const patientId = await (0, generatePatientId_1.generatePatientId)();
     const result = await prisma_1.prisma.patientInfo.create({
-        data: body,
+        data: {
+            ...body,
+            patientId
+        },
     });
     return result;
 };
@@ -38,15 +43,35 @@ const getAllPatientBySearch = async (searchTerm) => {
                 ]
             })
         },
-        orderBy: {
-            createdAt: "desc"
+        select: {
+            id: true,
+            name: true,
+            contactNumber: true,
+            patientId: true,
+            age: true,
+            sex: true,
+            address: true
         }
     });
     return result;
 };
-const getPatientById = async (id) => {
+const getPatientById = async (patientId) => {
     const result = await prisma_1.prisma.patientInfo.findUnique({
-        where: { id },
+        where: { patientId: patientId },
+        include: {
+            appointments: {
+                orderBy: {
+                    visitingDate: "desc"
+                },
+                take: 1,
+                select: {
+                    visitingDate: true,
+                    status: true,
+                    paymentStatus: true,
+                    patientType: true,
+                }
+            },
+        },
     });
     return result;
 };

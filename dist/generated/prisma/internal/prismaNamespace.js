@@ -48,7 +48,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.defineExtension = exports.AppointmentOrderByRelevanceFieldEnum = exports.ConnectorInfoOrderByRelevanceFieldEnum = exports.AssistantInfoOrderByRelevanceFieldEnum = exports.NullsOrder = exports.PatientInfoOrderByRelevanceFieldEnum = exports.DoctorInfoOrderByRelevanceFieldEnum = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.AppointmentScalarFieldEnum = exports.ConnectorInfoScalarFieldEnum = exports.AssistantInfoScalarFieldEnum = exports.PatientInfoScalarFieldEnum = exports.SafeModeScalarFieldEnum = exports.DoctorInfoScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
+exports.defineExtension = exports.AppointmentOrderByRelevanceFieldEnum = exports.ConnectorInfoOrderByRelevanceFieldEnum = exports.AssistantInfoOrderByRelevanceFieldEnum = exports.PatientInfoOrderByRelevanceFieldEnum = exports.DoctorInfoOrderByRelevanceFieldEnum = exports.NullsOrder = exports.UserOrderByRelevanceFieldEnum = exports.SortOrder = exports.AppointmentScalarFieldEnum = exports.ConnectorInfoScalarFieldEnum = exports.AssistantInfoScalarFieldEnum = exports.PatientInfoScalarFieldEnum = exports.IsSafeScalarFieldEnum = exports.DoctorInfoScalarFieldEnum = exports.UserScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.prismaVersion = exports.getExtensionContext = exports.Decimal = exports.Sql = exports.raw = exports.join = exports.empty = exports.sql = exports.PrismaClientValidationError = exports.PrismaClientInitializationError = exports.PrismaClientRustPanicError = exports.PrismaClientUnknownRequestError = exports.PrismaClientKnownRequestError = void 0;
 const runtime = __importStar(require("@prisma/client/runtime/client"));
 /**
  * Prisma Errors
@@ -105,7 +105,7 @@ exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
     User: 'User',
     DoctorInfo: 'DoctorInfo',
-    SafeMode: 'SafeMode',
+    IsSafe: 'IsSafe',
     PatientInfo: 'PatientInfo',
     AssistantInfo: 'AssistantInfo',
     ConnectorInfo: 'ConnectorInfo',
@@ -132,13 +132,9 @@ exports.UserScalarFieldEnum = {
 };
 exports.DoctorInfoScalarFieldEnum = {
     id: 'id',
-    name: 'name',
+    nameEnglish: 'nameEnglish',
+    nameBangla: 'nameBangla',
     designation: 'designation',
-    degree: 'degree',
-    specialty: 'specialty',
-    memberships: 'memberships',
-    chamberAddress: 'chamberAddress',
-    hospitalName: 'hospitalName',
     contactNumber: 'contactNumber',
     newPatientVisitingFee: 'newPatientVisitingFee',
     oldPatientVisitingFee: 'oldPatientVisitingFee',
@@ -146,15 +142,15 @@ exports.DoctorInfoScalarFieldEnum = {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
 };
-exports.SafeModeScalarFieldEnum = {
+exports.IsSafeScalarFieldEnum = {
     id: 'id',
     isSafe: 'isSafe',
     limit: 'limit',
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    doctorId: 'doctorId'
 };
 exports.PatientInfoScalarFieldEnum = {
     id: 'id',
+    patientId: 'patientId',
     name: 'name',
     age: 'age',
     sex: 'sex',
@@ -198,10 +194,12 @@ exports.AppointmentScalarFieldEnum = {
     connectorId: 'connectorId',
     visitingFee: 'visitingFee',
     discount: 'discount',
+    connectorFee: 'connectorFee',
     weight: 'weight',
     booldPusher: 'booldPusher',
     bloodGroup: 'bloodGroup',
     status: 'status',
+    serialNumber: 'serialNumber',
     paymentStatus: 'paymentStatus',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -215,25 +213,22 @@ exports.UserOrderByRelevanceFieldEnum = {
     email: 'email',
     password: 'password'
 };
+exports.NullsOrder = {
+    first: 'first',
+    last: 'last'
+};
 exports.DoctorInfoOrderByRelevanceFieldEnum = {
-    name: 'name',
+    nameEnglish: 'nameEnglish',
+    nameBangla: 'nameBangla',
     designation: 'designation',
-    degree: 'degree',
-    specialty: 'specialty',
-    memberships: 'memberships',
-    chamberAddress: 'chamberAddress',
-    hospitalName: 'hospitalName',
     contactNumber: 'contactNumber',
     email: 'email'
 };
 exports.PatientInfoOrderByRelevanceFieldEnum = {
     name: 'name',
+    age: 'age',
     contactNumber: 'contactNumber',
     address: 'address'
-};
-exports.NullsOrder = {
-    first: 'first',
-    last: 'last'
 };
 exports.AssistantInfoOrderByRelevanceFieldEnum = {
     email: 'email',

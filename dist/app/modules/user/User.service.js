@@ -21,66 +21,62 @@ const createUser = async (userData) => {
     if (isEmailExist) {
         throw new Error("User already exists with this email");
     }
-    const result = await prisma_1.prisma.user.create({
-        data: {
-            userName: userData.userName,
-            email: userData.email,
-            password: hashedPassword,
-            role: userData.role,
-            status: userData.status || client_1.Status.ACTIVE,
-        },
-    });
-    return result;
-};
-const getAllUsers = async () => {
-    const result = await prisma_1.prisma.user.findMany({
-        select: {
-            id: true,
-            userName: true,
-            email: true,
-            role: true,
-            status: true,
-            createdAt: true,
-            updatedAt: true,
-        }
-    });
-    return result;
-};
-const getUserById = async (id) => {
-    const result = await prisma_1.prisma.user.findUnique({
-        where: { id },
-        select: {
-            id: true,
-            userName: true,
-            email: true,
-            role: true,
-            status: true,
-            createdAt: true,
-            updatedAt: true,
-            assistant: true,
-            doctorInfo: true,
-        }
-    });
-    return result;
-};
-const updateUser = async (id, userData) => {
-    const updateData = {};
-    if (userData.userName)
-        updateData.userName = userData.userName;
-    if (userData.email)
-        updateData.email = userData.email;
-    if (userData.role)
-        updateData.role = userData.role;
-    if (userData.status)
-        updateData.status = userData.status;
-    if (userData.password) {
-        updateData.password = await bcrypt_1.default.hash(userData.password, Number(process.env.HASHPSSWORD_ROUND) || 10);
+    if (userData.role === "ASSISTANT") {
+        const result = await prisma_1.prisma.user.create({
+            data: {
+                userName: userData.userName,
+                email: userData.email,
+                password: hashedPassword,
+                role: userData.role,
+                status: userData.status || client_1.Status.ACTIVE,
+                assistant: {
+                    create: {
+                        name: userData.name,
+                        fatherName: userData.fatherName,
+                        motherName: userData.motherName,
+                        dateOfBirth: new Date(userData.dateOfBirth),
+                        sex: userData.sex,
+                        contactNumber: userData.contactNumber,
+                    },
+                }
+            },
+        });
+        return result;
     }
-    const result = await prisma_1.prisma.user.update({
-        where: { id },
-        data: updateData,
-    });
-    return result;
+    if (userData.role === "DOCTOR") {
+        const result = await prisma_1.prisma.user.create({
+            data: {
+                userName: userData.userName,
+                email: userData.email,
+                password: hashedPassword,
+                role: userData.role,
+                status: userData.status || client_1.Status.ACTIVE,
+                doctorInfo: {
+                    create: {
+                        nameEnglish: userData.nameEnglish || "",
+                        nameBangla: userData.nameBangla || "",
+                        designation: userData.designation || "",
+                        contactNumber: userData.contactNumber || "",
+                        newPatientVisitingFee: userData.newPatientVisitingFee || 0,
+                        oldPatientVisitingFee: userData.oldPatientVisitingFee || 0,
+                    },
+                }
+            },
+        });
+        return result;
+    }
+    if (userData.role === "ADMIN") {
+        const result = await prisma_1.prisma.user.create({
+            data: {
+                userName: userData.userName,
+                email: userData.email,
+                password: hashedPassword,
+                role: userData.role,
+                status: userData.status || client_1.Status.ACTIVE,
+            },
+        });
+        return result;
+    }
 };
 const deleteUser = async (id) => {
     const result = await prisma_1.prisma.user.update({
@@ -93,8 +89,5 @@ const deleteUser = async (id) => {
 };
 exports.UserService = {
     createUser,
-    getAllUsers,
-    getUserById,
-    updateUser,
     deleteUser,
 };

@@ -7,8 +7,6 @@ router.post("/", AppointmentController.createAppointment);
 
 router.get("/", AppointmentController.getAllAppointmentbyDays);
 
-router.get("/last-date", AppointmentController.getLastAppointmentDate);
-
 router.get("/:id", AppointmentController.getAppointmentById);
 
 router.patch("/:id/status", AppointmentController.updateAppointmentStatus);

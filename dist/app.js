@@ -11,13 +11,20 @@ const globalErrorHandler_1 = __importDefault(require("./app/middlewares/globalEr
 const http_status_codes_1 = require("http-status-codes");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
-    origin: ["http://localhost:5173"],
+    origin: [
+        "http://localhost:5173",
+        "http://drnipa.net",
+        "https://drnipa.net",
+    ],
     credentials: true,
 }));
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 app.use((0, cookie_parser_1.default)());
-app.use("/api/v1/image", express_1.default.static("public/images"));
+// app.use("/api/v1/image", express.static("public/images"));
+app.get("/", (req, res) => {
+    res.send("Appointment Management System Backend is running!");
+});
 app.use("/api/v1", routes_1.default);
 app.use(globalErrorHandler_1.default);
 app.use((req, res, next) => {

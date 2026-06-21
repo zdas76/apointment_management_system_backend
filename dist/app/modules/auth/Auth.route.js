@@ -11,7 +11,7 @@ const auth_1 = __importDefault(require("../../middlewares/auth"));
 const router = express_1.default.Router();
 router.post("/login", Auth_controllers_1.AuthControllers.loginUser);
 router.post("/refresh-token", Auth_controllers_1.AuthControllers.refreshToken);
-router.post("/change-password", (0, auth_1.default)(enums_1.UserRole.ADMIN), Auth_controllers_1.AuthControllers.changePassword);
+router.post("/change-password", (0, auth_1.default)(enums_1.UserRole.ADMIN, enums_1.UserRole.DOCTOR, enums_1.UserRole.ASSISTANT), Auth_controllers_1.AuthControllers.changePassword);
 router.post("/forgot-password", Auth_controllers_1.AuthControllers.forgotPassword);
 router.post("/reset-password", Auth_controllers_1.AuthControllers.resetPassword);
 exports.AuthRoutes = router;

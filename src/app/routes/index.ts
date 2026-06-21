@@ -6,6 +6,7 @@ import { ConnectorInfoRoute } from '../modules/connectInfo/ConnectorInfo.route';
 import { AppointmentRoute } from '../modules/appointment/Appointment.route';
 import { UserRoute } from '../modules/user/User.route';
 import { DoctorInfoRoute } from '../modules/doctorInfo/DoctorInfo.route';
+import { ReportRoute } from '../modules/report/Report.route';
 
 export interface IRoute {
     path: string;
@@ -42,6 +43,10 @@ const moduleRoutes: IRoute[] = [
     {
         path: '/doctor',
         route: DoctorInfoRoute
+    },
+    {
+        path: '/report',
+        route: ReportRoute
     }
 ];
 

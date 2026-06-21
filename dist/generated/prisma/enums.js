@@ -24,7 +24,8 @@ exports.Sex = {
 exports.AppointmentStatus = {
     BOOKED: 'BOOKED',
     PRESENT: 'PRESENT',
-    ABSENT: 'ABSENT'
+    ABSENT: 'ABSENT',
+    VISITED: 'VISITED'
 };
 exports.PaymentStatus = {
     PAID: 'PAID',

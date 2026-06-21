@@ -42,18 +42,6 @@ const getAppointmentById = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const getLastAppointmentDate = catchAsync(async (req: Request, res: Response) => {
-    const patientId = parseInt(req.query.patientId as string);
-
-    const result = await AppointmentService.getLastAppointmentDate(patientId);
-
-    sendResponse(res, {
-        statusCode: StatusCodes.OK,
-        success: true,
-        message: "Last Appointment Date fetch Successfully",
-        data: result,
-    });
-});
 
 const updateAppointment = catchAsync(async (req: Request, res: Response) => {
     const result = await AppointmentService.updateAppointment(Number(req.params.id), req.body);
@@ -90,6 +78,7 @@ const deleteAppointment = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
+
 export const AppointmentController = {
     createAppointment,
     getAllAppointmentbyDays,
@@ -97,5 +86,5 @@ export const AppointmentController = {
     updateAppointment,
     updateAppointmentStatus,
     deleteAppointment,
-    getLastAppointmentDate
+
 }
