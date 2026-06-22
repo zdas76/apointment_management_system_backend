@@ -63,7 +63,6 @@ const getPatientById = async (patientId) => {
                 orderBy: {
                     visitingDate: "desc"
                 },
-                take: 1,
                 select: {
                     visitingDate: true,
                     status: true,

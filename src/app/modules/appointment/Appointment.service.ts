@@ -87,7 +87,13 @@ const getAllAppointmentbyDays = async (queryDate?: string) => {
 
         include: {
             patientInfo: true,
-            connectorInfo: true,
+            connectorInfo: {
+                select: {
+                    id: true,
+                    name: true,
+                    diagnosticName: true
+                }
+            },
         },
 
     });
@@ -109,7 +115,13 @@ const getAllAppointmentbyDays = async (queryDate?: string) => {
 
         include: {
             patientInfo: true,
-            connectorInfo: true,
+            connectorInfo: {
+                select: {
+                    id: true,
+                    name: true,
+                    diagnosticName: true
+                }
+            },
         },
     });
 
@@ -127,8 +139,7 @@ const getAppointmentById = async (id: number) => {
                 select: {
                     id: true,
                     name: true,
-                    newPatientAmount: true,
-                    oldPatientAmount: true,
+                    diagnosticName: true
                 }
             },
         },
@@ -137,6 +148,8 @@ const getAppointmentById = async (id: number) => {
 };
 
 const updateAppointment = async (id: number, appointmentData: Appointment) => {
+
+    console.log("appointmentData", appointmentData)
 
     const updateData = {} as Appointment;
 
@@ -181,6 +194,7 @@ const updateAppointment = async (id: number, appointmentData: Appointment) => {
         updateData.paymentStatus = appointmentData.paymentStatus;
     }
 
+    console.log("updateData", updateData)
     const appointment = await prisma.appointment.findFirst({
         where: { id: Number(id) },
     });
@@ -188,7 +202,7 @@ const updateAppointment = async (id: number, appointmentData: Appointment) => {
     if (!appointment) {
         throw new Error("Appointment not found");
     }
-
+    console.log("appointment", appointment)
     const result = await prisma.appointment.update({
         where: { id: appointment.id },
         data: updateData,
@@ -229,6 +243,18 @@ const deleteAppointment = async (id: number) => {
     return result;
 };
 
+const lastVisitingDate = async (patientId: number) => {
+
+    const patientInfo = await prisma.appointment.findFirst({
+        where: { patientId: patientId, status: AppointmentStatus.VISITED },
+        orderBy: {
+            visitingDate: "desc"
+        },
+    });
+
+    return patientInfo?.visitingDate || null;
+}
+
 export const AppointmentService = {
     createAppointment,
     getAllAppointmentbyDays,
@@ -236,5 +262,6 @@ export const AppointmentService = {
     updateAppointment,
     updateAppointmentStatus,
     deleteAppointment,
+    lastVisitingDate
 
 };

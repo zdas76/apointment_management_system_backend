@@ -15,4 +15,6 @@ router.patch("/:id", AppointmentController.updateAppointment);
 
 router.delete("/:id", AppointmentController.deleteAppointment);
 
+router.get("/last-visiting-date/:patientId", AppointmentController.lastVisitingDate);
+
 export const AppointmentRoute = router;

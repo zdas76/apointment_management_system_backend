@@ -74,7 +74,6 @@ const getPatientById = async (patientId: number): Promise<IPatientInfo | null> =
                 orderBy: {
                     visitingDate: "desc"
                 },
-                take: 1,
                 select: {
                     visitingDate: true,
                     status: true,

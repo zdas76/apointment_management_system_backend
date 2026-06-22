@@ -66,6 +66,16 @@ const deleteAppointment = (0, catchAsync_1.default)(async (req, res) => {
         data: result,
     });
 });
+const lastVisitingDate = (0, catchAsync_1.default)(async (req, res) => {
+    const patientId = Number(req.params.patientId);
+    const result = await Appointment_service_1.AppointmentService.lastVisitingDate(patientId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        success: true,
+        message: "Last Visiting Date fetch Successfully",
+        data: result,
+    });
+});
 exports.AppointmentController = {
     createAppointment,
     getAllAppointmentbyDays,
@@ -73,4 +83,5 @@ exports.AppointmentController = {
     updateAppointment,
     updateAppointmentStatus,
     deleteAppointment,
+    lastVisitingDate,
 };

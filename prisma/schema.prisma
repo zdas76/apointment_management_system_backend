@@ -78,17 +78,15 @@ model AssistantInfo {
 }
 
 model ConnectorInfo {
-  id               Int           @id @default(autoincrement())
-  name             String
-  contactNumber    String        @unique
-  email            String?
-  diagnosticName   String?
-  newPatientAmount Int
-  oldPatientAmount Int
-  isDeleted        Boolean       @default(false)
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  appointments     Appointment[]
+  id             Int           @id @default(autoincrement())
+  name           String
+  contactNumber  String        @unique
+  email          String?
+  diagnosticName String?
+  isDeleted      Boolean       @default(false)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  appointments   Appointment[]
 }
 
 model Appointment {

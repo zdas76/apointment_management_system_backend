@@ -13,4 +13,5 @@ router.get("/:id", Appointment_controller_1.AppointmentController.getAppointment
 router.patch("/:id/status", Appointment_controller_1.AppointmentController.updateAppointmentStatus);
 router.patch("/:id", Appointment_controller_1.AppointmentController.updateAppointment);
 router.delete("/:id", Appointment_controller_1.AppointmentController.deleteAppointment);
+router.get("/last-visiting-date/:patientId", Appointment_controller_1.AppointmentController.lastVisitingDate);
 exports.AppointmentRoute = router;

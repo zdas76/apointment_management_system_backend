@@ -179,8 +179,6 @@ exports.ConnectorInfoScalarFieldEnum = {
     contactNumber: 'contactNumber',
     email: 'email',
     diagnosticName: 'diagnosticName',
-    newPatientAmount: 'newPatientAmount',
-    oldPatientAmount: 'oldPatientAmount',
     isDeleted: 'isDeleted',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
