@@ -79,6 +79,8 @@ const getPatientById = async (patientId: number): Promise<IPatientInfo | null> =
                     status: true,
                     paymentStatus: true,
                     patientType: true,
+                    visitingFee: true,
+                    discount: true
                 }
             },
         },

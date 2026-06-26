@@ -68,6 +68,8 @@ const getPatientById = async (patientId) => {
                     status: true,
                     paymentStatus: true,
                     patientType: true,
+                    visitingFee: true,
+                    discount: true
                 }
             },
         },
